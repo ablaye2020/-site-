@@ -10,109 +10,128 @@ EMPIRE ZETSU dirigé par l'empereur BLACK TOBI
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Fond animé -->
-    <div class="animated-bg">
-        <div class="gradient-bg"></div>
-        <div class="particles"></div>
-    </div>
+    <!-- Fond fixe -->
+    <div class="fixed-bg"></div>
 
     <!-- Audio -->
     <audio id="bgAudio" loop>
-        <source src="song.mp3 2.mp4a" type="audio/mpeg">
-        <source src="song.mp3.mp4a" type="audio/mp4">
+        <source src="song.mp3" type="audio/mpeg">
+        <source src="song.m4a" type="audio/mp4">
     </audio>
 
     <!-- Contrôle audio -->
     <button id="audioBtn" class="audio-btn">
         <i class="fas fa-music"></i>
-        <span class="pulse-ring"></span>
     </button>
 
     <!-- Navigation -->
-    <nav class="luxury-nav">
-        <div class="logo">
-            <i class="fas fa-crown"></i>
-            <span>ZETSU</span>
-            <i class="fas fa-dragon"></i>
-        </div>
-        <ul class="nav-links">
-            <li><a href="#accueil">Accueil</a></li>
-            <li><a href="#chefs">Chefs</a></li>
-            <li><a href="#souschefs">Sous-Chefs</a></li>
-            <li><a href="#soldats">Soldats</a></li>
-        </ul>
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-crown"></i>
+                <span>ZETSU</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#accueil" class="nav-link active">Accueil</a></li>
+                <li><a href="#chefs" class="nav-link">Chefs</a></li>
+                <li><a href="#souschefs" class="nav-link">Sous-Chefs</a></li>
+                <li><a href="#soldats" class="nav-link">Soldats</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Section Accueil -->
     <section id="accueil" class="hero">
+        <div class="hero-overlay"></div>
         <div class="hero-content">
-            <div class="hero-glow"></div>
-            <h1 class="luxury-title">
-                <span class="title-line">CLAN</span>
-                <span class="title-main">ZETSU</span>
-                <span class="title-sub">Là où les légendes s'écrivent</span>
-            </h1>
+            <div class="hero-badge">CLAN OFFICIEL</div>
+            <h1 class="hero-title">ZETSU</h1>
+            <p class="hero-subtitle">Là où les légendes s'écrivent,<br>les souvenirs sont éternels</p>
             <div class="hero-stats">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalMembers">0</div>
-                    <div class="stat-label">Guerriers</div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalMembers">0</span>
+                    <span class="stat-label">Membres</span>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">⚔️</div>
-                    <div class="stat-label">Légendes Vivantes</div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Grades</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label">Héritage</span>
                 </div>
             </div>
-            <div class="scroll-indicator">
-                <span>Découvrir</span>
-                <i class="fas fa-chevron-down"></i>
+            <a href="#chefs" class="hero-btn">
+                <span>Découvrir le clan</span>
+                <i class="fas fa-arrow-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Section Chefs -->
+    <section id="chefs" class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h2 class="section-title">Conseil Suprême</h2>
+                <p class="section-subtitle">Les leaders légendaires du clan</p>
+                <div class="section-line"></div>
             </div>
+            <div id="chefsContainer" class="members-grid chefs-grid"></div>
         </div>
     </section>
 
-    <!-- Chefs Section -->
-    <section id="chefs" class="members-section elite-section">
-        <div class="section-header">
-            <i class="fas fa-crown"></i>
-            <h2>Conseil Suprême</h2>
-            <div class="section-divider"></div>
+    <!-- Section Sous-Chefs -->
+    <section id="souschefs" class="section alt-bg">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-star-of-life"></i>
+                </div>
+                <h2 class="section-title">Garde d'Élite</h2>
+                <p class="section-subtitle">Les piliers de la puissance du clan</p>
+                <div class="section-line"></div>
+            </div>
+            <div id="sousChefsContainer" class="members-grid"></div>
         </div>
-        <div id="chefsContainer" class="members-grid elite-grid"></div>
     </section>
 
-    <!-- Sous-Chefs Section -->
-    <section id="souschefs" class="members-section">
-        <div class="section-header">
-            <i class="fas fa-star-of-life"></i>
-            <h2>Garde d'Élite</h2>
-            <div class="section-divider"></div>
+    <!-- Section Soldats -->
+    <section id="soldats" class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h2 class="section-title">Légion Sacrée</h2>
+                <p class="section-subtitle">Les guerriers d'élite du clan</p>
+                <div class="section-line"></div>
+            </div>
+            <div id="soldatsContainer" class="members-grid"></div>
         </div>
-        <div id="sousChefsContainer" class="members-grid"></div>
-    </section>
-
-    <!-- Soldats Section -->
-    <section id="soldats" class="members-section">
-        <div class="section-header">
-            <i class="fas fa-shield-alt"></i>
-            <h2>Légion Sacrée</h2>
-            <div class="section-divider"></div>
-        </div>
-        <div id="soldatsContainer" class="members-grid"></div>
     </section>
 
     <!-- Footer -->
-    <footer class="luxury-footer">
-        <div class="footer-content">
-            <div class="footer-logo">
-                <i class="fas fa-fire"></i>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <i class="fas fa-dragon"></i>
                 <span>CLAN ZETSU</span>
-                <i class="fas fa-fire"></i>
+                <i class="fas fa-dragon"></i>
             </div>
-            <p>Héritage éternel - Depuis la nuit des temps</p>
+            <p class="footer-text">Héritage éternel - Depuis la nuit des temps</p>
+            <div class="footer-copyright">
+                <p>© 2024 Clan ZETSU - Tous droits réservés</p>
+            </div>
         </div>
     </footer>
 
