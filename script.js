@@ -62,8 +62,8 @@ function createMemberCard(member, rankType) {
     
     const rankLabels = {
         chef: '👑 CHEF SUPRÊME',
-        souschef: '⭐ SOUS-CHEF D\'ÉLITE',
-        soldat: '⚔️ SOLDAT LÉGENDAIRE'
+        souschef: '⭐ SOUS-CHEF',
+        soldat: '⚔️ SOLDAT'
     };
     
     let avatarHtml = '';
@@ -138,52 +138,81 @@ function initAudio() {
                 e.stopPropagation();
                 if (audio.paused) {
                     audio.play();
-                    audioBtn.innerHTML = '<i class="fas fa-volume-up"></i><span class="pulse-ring"></span>';
+                    audioBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
                 } else {
                     audio.pause();
-                    audioBtn.innerHTML = '<i class="fas fa-volume-mute"></i><span class="pulse-ring"></span>';
+                    audioBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
                 }
             });
         }
     }
 }
 
+// Navigation mobile
 function initMobileNav() {
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    if (hamburger && navLinks) {
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            hamburger.classList.toggle('active');
+    const toggle = document.querySelector('.nav-toggle');
+    const menu = document.querySelector('.nav-menu');
+    
+    if (toggle && menu) {
+        toggle.addEventListener('click', () => {
+            menu.classList.toggle('active');
+        });
+        
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.remove('active');
+            });
         });
     }
 }
 
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
+// Navigation active
+function initActiveNav() {
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            const sectionHeight = section.clientHeight;
+            if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
             }
         });
     });
-    
-    const scrollIndicator = document.querySelector('.scroll-indicator');
-    if (scrollIndicator) {
-        scrollIndicator.addEventListener('click', () => {
-            document.getElementById('chefs').scrollIntoView({ behavior: 'smooth' });
-        });
-    }
 }
 
+// Smooth scroll
+function initSmoothScroll() {
+    document.querySelectorAll('.nav-link, .hero-btn').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId && targetId !== '#') {
+                const target = document.querySelector(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    });
+}
+
+// Admin button
 function initAdminButton() {
     if (document.getElementById('adminBtn')) return;
     
     const adminBtn = document.createElement('button');
     adminBtn.id = 'adminBtn';
-    adminBtn.className = 'admin-panel-btn';
+    adminBtn.className = 'admin-btn';
     adminBtn.innerHTML = '<i class="fas fa-user-shield"></i>';
     adminBtn.onclick = () => {
         window.location.href = 'admin.html';
@@ -195,10 +224,12 @@ window.refreshDisplay = function() {
     displayMembers();
 };
 
+// Initialisation
 document.addEventListener('DOMContentLoaded', () => {
     displayMembers();
     initAudio();
     initMobileNav();
+    initActiveNav();
     initSmoothScroll();
     initAdminButton();
 });
