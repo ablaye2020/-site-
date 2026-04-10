@@ -53,22 +53,39 @@
                         <option value="souschef">Sous-Chef</option>
                         <option value="soldat">Soldat</option>
                     </select>
-                    <input type="text" id="newMemberAvatar" placeholder="URL de l'avatar (optionnel)" class="admin-input">
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Cliquez ou glissez une photo</p>
+                        <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                    </div>
+                    <div id="imagePreview" class="image-preview"></div>
+                    <input type="hidden" id="newMemberAvatar" value="">
+                    
                     <button onclick="addMember()" class="admin-btn">Ajouter le membre</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal pour modifier -->
     <div id="editModal" class="modal">
         <div class="modal-content glass">
             <span class="close" onclick="closeModal()">&times;</span>
             <h3>Modifier le membre</h3>
             <input type="text" id="editName" placeholder="Nom" class="admin-input">
-            <input type="text" id="editAvatar" placeholder="URL de l'avatar" class="admin-input">
-            <button onclick="saveEdit()" class="admin-btn">Sauvegarder</button>
-            <button onclick="deleteMember()" class="delete-btn">Supprimer</button>
+            
+            <div class="upload-area small-upload" id="editUploadArea">
+                <i class="fas fa-camera"></i>
+                <p>Changer la photo</p>
+                <input type="file" id="editPhotoUpload" accept="image/*" style="display: none;">
+            </div>
+            <div id="editImagePreview" class="image-preview"></div>
+            <input type="hidden" id="editAvatar" value="">
+            
+            <div class="modal-buttons">
+                <button onclick="saveEdit()" class="admin-btn">Sauvegarder</button>
+                <button onclick="deleteMember()" class="delete-btn">Supprimer</button>
+            </div>
         </div>
     </div>
 
