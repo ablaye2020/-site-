@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Clan ZETSU</title>
+    <link rel="stylesheet" href="admin-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="login-container" id="loginContainer">
+            <div class="login-box glass">
+                <h2><i class="fas fa-user-shield"></i> Accès Admin</h2>
+                <input type="password" id="adminPassword" placeholder="Mot de passe" class="admin-input">
+                <button onclick="checkPassword()" class="admin-btn">Connexion</button>
+                <p class="error-msg" id="errorMsg"></p>
+            </div>
+        </div>
+
+        <div class="dashboard" id="dashboard" style="display: none;">
+            <div class="admin-header">
+                <h1><i class="fas fa-dragon"></i> Panneau d'Administration - Clan ZETSU</h1>
+                <button onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showTab('chefs')">👑 Chefs</button>
+                <button class="tab-btn" onclick="showTab('souschefs')">⭐ Sous-Chefs</button>
+                <button class="tab-btn" onclick="showTab('soldats')">⚔️ Soldats</button>
+                <button class="tab-btn" onclick="showTab('add')">➕ Ajouter</button>
+            </div>
+
+            <div id="chefsTab" class="tab-content active">
+                <div class="members-list" id="chefsList"></div>
+            </div>
+
+            <div id="souschefsTab" class="tab-content">
+                <div class="members-list" id="sousChefsList"></div>
+            </div>
+
+            <div id="soldatsTab" class="tab-content">
+                <div class="members-list" id="soldatsList"></div>
+            </div>
+
+            <div id="addTab" class="tab-content">
+                <div class="add-member-form glass">
+                    <h3>Ajouter un nouveau membre</h3>
+                    <input type="text" id="newMemberName" placeholder="Nom du membre" class="admin-input">
+                    <select id="newMemberRank" class="admin-input">
+                        <option value="chef">Chef Suprême</option>
+                        <option value="souschef">Sous-Chef</option>
+                        <option value="soldat">Soldat</option>
+                    </select>
+                    <input type="text" id="newMemberAvatar" placeholder="URL de l'avatar (optionnel)" class="admin-input">
+                    <button onclick="addMember()" class="admin-btn">Ajouter le membre</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour modifier -->
+    <div id="editModal" class="modal">
+        <div class="modal-content glass">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Modifier le membre</h3>
+            <input type="text" id="editName" placeholder="Nom" class="admin-input">
+            <input type="text" id="editAvatar" placeholder="URL de l'avatar" class="admin-input">
+            <button onclick="saveEdit()" class="admin-btn">Sauvegarder</button>
+            <button onclick="deleteMember()" class="delete-btn">Supprimer</button>
+        </div>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>
