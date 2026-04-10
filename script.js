@@ -1,4 +1,4 @@
-// Données par défaut (uniquement si localStorage est vide)
+// Données par défaut
 const defaultMembersData = {
     chefs: [
         { name: "Black Tobi zetsu", rank: "chef", avatar: "", id: "chef1" }
@@ -25,51 +25,54 @@ const defaultMembersData = {
     ]
 };
 
-// Charger les données depuis localStorage ou utiliser les valeurs par défaut
+// Charger les données
 function loadData() {
     const saved = localStorage.getItem('clanZetsuData');
     if (saved) {
         return JSON.parse(saved);
     } else {
-        // Première visite : sauvegarder les données par défaut
         saveData(defaultMembersData);
         return defaultMembersData;
     }
 }
 
-// Sauvegarder les données
 function saveData(data) {
     localStorage.setItem('clanZetsuData', JSON.stringify(data));
 }
 
-// Mettre à jour le compteur total
 function updateTotalMembers(data) {
     const total = data.chefs.length + data.sousChefs.length + data.soldats.length;
     const totalElement = document.getElementById('totalMembers');
-    if (totalElement) {
-        totalElement.textContent = total;
-    }
+    if (totalElement) totalElement.textContent = total;
 }
 
-// Créer une carte membre
+function getInitials(name) {
+    const match = name.match(/[A-Za-z\u00C0-\u00FF]/);
+    return match ? match[0].toUpperCase() : 'Z';
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 function createMemberCard(member, rankType) {
     const card = document.createElement('div');
     card.className = 'member-card';
     
     const rankLabels = {
         chef: '👑 CHEF SUPRÊME',
-        souschef: '⭐ SOUS-CHEF',
-        soldat: '⚔️ SOLDAT'
+        souschef: '⭐ SOUS-CHEF D\'ÉLITE',
+        soldat: '⚔️ SOLDAT LÉGENDAIRE'
     };
     
     const avatarHtml = member.avatar && member.avatar !== '' 
-        ? `<img src="${member.avatar}" alt="${member.name}">`
+        ? `<img src="${member.avatar}" alt="${member.name}" onerror="this.src=''">`
         : `<div class="default-avatar">${getInitials(member.name)}</div>`;
     
     card.innerHTML = `
-        <div class="member-avatar">
-            ${avatarHtml}
-        </div>
+        <div class="member-avatar">${avatarHtml}</div>
         <div class="member-name">${escapeHtml(member.name)}</div>
         <div class="member-rank">${rankLabels[rankType]}</div>
     `;
@@ -77,20 +80,6 @@ function createMemberCard(member, rankType) {
     return card;
 }
 
-// Obtenir les initiales
-function getInitials(name) {
-    const match = name.match(/[A-Za-z\u00C0-\u00FF]/);
-    return match ? match[0].toUpperCase() : 'Z';
-}
-
-// Échapper le HTML
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-// Afficher tous les membres
 function displayMembers() {
     const data = loadData();
     
@@ -122,24 +111,42 @@ function displayMembers() {
     updateTotalMembers(data);
 }
 
-// Gestion de la musique (si fichier audio)
+// Audio
 let audio = null;
+let isPlaying = false;
 
 function initAudio() {
-    const audioElement = document.getElementById('bgAudio');
-    if (audioElement) {
-        audio = audioElement;
+    audio = document.getElementById('bgAudio');
+    if (audio) {
         audio.volume = 0.3;
+        audio.loop = true;
         
         const audioBtn = document.getElementById('audioBtn');
+        
+        // Tentative de lecture automatique
+        const attemptPlay = () => {
+            audio.play().then(() => {
+                isPlaying = true;
+                if (audioBtn) audioBtn.innerHTML = '<i class="fas fa-volume-up"></i><span class="pulse-ring"></span>';
+            }).catch(() => {
+                console.log('Auto-play bloqué, attendez un clic');
+            });
+            document.removeEventListener('click', attemptPlay);
+            document.removeEventListener('touchstart', attemptPlay);
+        };
+        
+        document.addEventListener('click', attemptPlay);
+        document.addEventListener('touchstart', attemptPlay);
+        
         if (audioBtn) {
-            audioBtn.addEventListener('click', () => {
+            audioBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 if (audio.paused) {
-                    audio.play().catch(e => console.log('Lecture auto bloquée'));
-                    audioBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    audio.play();
+                    audioBtn.innerHTML = '<i class="fas fa-volume-up"></i><span class="pulse-ring"></span>';
                 } else {
                     audio.pause();
-                    audioBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                    audioBtn.innerHTML = '<i class="fas fa-volume-mute"></i><span class="pulse-ring"></span>';
                 }
             });
         }
@@ -150,7 +157,6 @@ function initAudio() {
 function initMobileNav() {
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
-    
     if (hamburger && navLinks) {
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
@@ -159,16 +165,41 @@ function initMobileNav() {
     }
 }
 
-// Vérifier si admin est connecté et afficher le bouton
-function checkAdminAccess() {
-    const isAdmin = localStorage.getItem('zetsuAdminLoggedIn') === 'true';
-    const adminBtn = document.getElementById('adminBtn');
-    if (adminBtn && isAdmin) {
-        adminBtn.classList.add('visible');
+// Scroll smooth
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+    
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+        scrollIndicator.addEventListener('click', () => {
+            document.getElementById('chefs').scrollIntoView({ behavior: 'smooth' });
+        });
     }
 }
 
-// Rafraîchir l'affichage (appelé depuis admin après modifications)
+// Admin button
+function initAdminButton() {
+    const adminBtn = document.createElement('button');
+    adminBtn.id = 'adminBtn';
+    adminBtn.className = 'admin-panel-btn';
+    adminBtn.innerHTML = '<i class="fas fa-user-shield"></i>';
+    adminBtn.onclick = () => {
+        window.location.href = 'admin.html';
+    };
+    document.body.appendChild(adminBtn);
+    
+    const isAdmin = localStorage.getItem('zetsuAdminLoggedIn') === 'true';
+    if (isAdmin) adminBtn.classList.add('visible');
+}
+
 window.refreshDisplay = function() {
     displayMembers();
 };
@@ -178,27 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
     displayMembers();
     initAudio();
     initMobileNav();
-    checkAdminAccess();
-    
-    // Ajouter le bouton admin
-    const adminBtn = document.createElement('button');
-    adminBtn.id = 'adminBtn';
-    adminBtn.className = 'admin-panel-btn';
-    adminBtn.innerHTML = '<i class="fas fa-user-shield"></i>';
-    adminBtn.onclick = () => {
-        window.location.href = 'admin.html';
-    };
-    document.body.appendChild(adminBtn);
-    checkAdminAccess();
-    
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
+    initSmoothScroll();
+    initAdminButton();
 });
