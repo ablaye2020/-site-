@@ -25,7 +25,6 @@ const defaultMembersData = {
     ]
 };
 
-// Charger les données
 function loadData() {
     const saved = localStorage.getItem('clanZetsuData');
     if (saved) {
@@ -67,9 +66,12 @@ function createMemberCard(member, rankType) {
         soldat: '⚔️ SOLDAT LÉGENDAIRE'
     };
     
-    const avatarHtml = member.avatar && member.avatar !== '' 
-        ? `<img src="${member.avatar}" alt="${member.name}" onerror="this.src=''">`
-        : `<div class="default-avatar">${getInitials(member.name)}</div>`;
+    let avatarHtml = '';
+    if (member.avatar && member.avatar !== '') {
+        avatarHtml = `<img src="${member.avatar}" alt="${member.name}">`;
+    } else {
+        avatarHtml = `<div class="default-avatar">${getInitials(member.name)}</div>`;
+    }
     
     card.innerHTML = `
         <div class="member-avatar">${avatarHtml}</div>
@@ -146,7 +148,6 @@ function initAudio() {
     }
 }
 
-// Navigation mobile
 function initMobileNav() {
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
@@ -158,7 +159,6 @@ function initMobileNav() {
     }
 }
 
-// Scroll smooth
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
@@ -178,31 +178,23 @@ function initSmoothScroll() {
     }
 }
 
-// Admin button - TOUJOURS VISIBLE
 function initAdminButton() {
-    // Vérifier si le bouton existe déjà
     if (document.getElementById('adminBtn')) return;
     
     const adminBtn = document.createElement('button');
     adminBtn.id = 'adminBtn';
     adminBtn.className = 'admin-panel-btn';
     adminBtn.innerHTML = '<i class="fas fa-user-shield"></i>';
-    adminBtn.style.cssText = 'position: fixed; bottom: 30px; left: 30px; z-index: 1000; background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; border-radius: 50%; width: 55px; height: 55px; cursor: pointer; color: #000; font-size: 1.3rem; transition: all 0.3s; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255,215,0,0.5);';
-    
-    adminBtn.onmouseover = () => { adminBtn.style.transform = 'scale(1.1)'; };
-    adminBtn.onmouseout = () => { adminBtn.style.transform = 'scale(1)'; };
     adminBtn.onclick = () => {
         window.location.href = 'admin.html';
     };
     document.body.appendChild(adminBtn);
 }
 
-// Rafraîchir l'affichage depuis admin
 window.refreshDisplay = function() {
     displayMembers();
 };
 
-// Initialisation
 document.addEventListener('DOMContentLoaded', () => {
     displayMembers();
     initAudio();
