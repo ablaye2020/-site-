@@ -1,5 +1,5 @@
-// Données des membres
-let membersData = {
+// Données par défaut (uniquement si localStorage est vide)
+const defaultMembersData = {
     chefs: [
         { name: "Black Tobi zetsu", rank: "chef", avatar: "", id: "chef1" }
     ],
@@ -25,24 +25,26 @@ let membersData = {
     ]
 };
 
-// Charger les données depuis localStorage
+// Charger les données depuis localStorage ou utiliser les valeurs par défaut
 function loadData() {
     const saved = localStorage.getItem('clanZetsuData');
     if (saved) {
-        membersData = JSON.parse(saved);
+        return JSON.parse(saved);
+    } else {
+        // Première visite : sauvegarder les données par défaut
+        saveData(defaultMembersData);
+        return defaultMembersData;
     }
-    updateTotalMembers();
 }
 
 // Sauvegarder les données
-function saveData() {
-    localStorage.setItem('clanZetsuData', JSON.stringify(membersData));
-    updateTotalMembers();
+function saveData(data) {
+    localStorage.setItem('clanZetsuData', JSON.stringify(data));
 }
 
 // Mettre à jour le compteur total
-function updateTotalMembers() {
-    const total = membersData.chefs.length + membersData.sousChefs.length + membersData.soldats.length;
+function updateTotalMembers(data) {
+    const total = data.chefs.length + data.sousChefs.length + data.soldats.length;
     const totalElement = document.getElementById('totalMembers');
     if (totalElement) {
         totalElement.textContent = total;
@@ -90,51 +92,57 @@ function escapeHtml(text) {
 
 // Afficher tous les membres
 function displayMembers() {
+    const data = loadData();
+    
     const chefsContainer = document.getElementById('chefsContainer');
     const sousChefsContainer = document.getElementById('sousChefsContainer');
     const soldatsContainer = document.getElementById('soldatsContainer');
     
     if (chefsContainer) {
         chefsContainer.innerHTML = '';
-        membersData.chefs.forEach(chef => {
+        data.chefs.forEach(chef => {
             chefsContainer.appendChild(createMemberCard(chef, 'chef'));
         });
     }
     
     if (sousChefsContainer) {
         sousChefsContainer.innerHTML = '';
-        membersData.sousChefs.forEach(sousChef => {
+        data.sousChefs.forEach(sousChef => {
             sousChefsContainer.appendChild(createMemberCard(sousChef, 'souschef'));
         });
     }
     
     if (soldatsContainer) {
         soldatsContainer.innerHTML = '';
-        membersData.soldats.forEach(soldat => {
+        data.soldats.forEach(soldat => {
             soldatsContainer.appendChild(createMemberCard(soldat, 'soldat'));
         });
     }
+    
+    updateTotalMembers(data);
 }
 
-// Gestion de la musique
+// Gestion de la musique (si fichier audio)
 let audio = null;
-let isPlaying = false;
 
 function initAudio() {
-    audio = document.getElementById('bgVideo');
-    if (audio) {
+    const audioElement = document.getElementById('bgAudio');
+    if (audioElement) {
+        audio = audioElement;
         audio.volume = 0.3;
-        const audioBtn = document.getElementById('audioBtn');
         
-        audioBtn.addEventListener('click', () => {
-            if (audio.muted) {
-                audio.muted = false;
-                audioBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-            } else {
-                audio.muted = true;
-                audioBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-            }
-        });
+        const audioBtn = document.getElementById('audioBtn');
+        if (audioBtn) {
+            audioBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play().catch(e => console.log('Lecture auto bloquée'));
+                    audioBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                } else {
+                    audio.pause();
+                    audioBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                }
+            });
+        }
     }
 }
 
@@ -143,7 +151,7 @@ function initMobileNav() {
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     
-    if (hamburger) {
+    if (hamburger && navLinks) {
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
             hamburger.classList.toggle('active');
@@ -151,20 +159,22 @@ function initMobileNav() {
     }
 }
 
-// Vérifier si admin est connecté
+// Vérifier si admin est connecté et afficher le bouton
 function checkAdminAccess() {
+    const isAdmin = localStorage.getItem('zetsuAdminLoggedIn') === 'true';
     const adminBtn = document.getElementById('adminBtn');
-    if (adminBtn) {
-        const isAdmin = localStorage.getItem('zetsuAdminLoggedIn') === 'true';
-        if (isAdmin) {
-            adminBtn.classList.add('visible');
-        }
+    if (adminBtn && isAdmin) {
+        adminBtn.classList.add('visible');
     }
 }
 
+// Rafraîchir l'affichage (appelé depuis admin après modifications)
+window.refreshDisplay = function() {
+    displayMembers();
+};
+
 // Initialisation
 document.addEventListener('DOMContentLoaded', () => {
-    loadData();
     displayMembers();
     initAudio();
     initMobileNav();
