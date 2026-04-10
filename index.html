@@ -1,0 +1,90 @@
+EMPIRE ZETSU 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Clan ZETSU - Mémoires et Héritage</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="video-container">
+        <video autoplay muted loop id="bgVideo">
+            <source src="song.mp4" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+    </div>
+
+    <!-- Audio Control -->
+    <button id="audioBtn" class="audio-btn">
+        <i class="fas fa-volume-mute"></i>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="glass-nav">
+        <div class="logo">
+            <i class="fas fa-dragon"></i>
+            <span>ZETSU</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#accueil">Accueil</a></li>
+            <li><a href="#chefs">Chefs</a></li>
+            <li><a href="#souschefs">Sous-Chefs</a></li>
+            <li><a href="#soldats">Soldats</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="accueil" class="hero">
+        <div class="hero-content">
+            <h1 class="glitch" data-text="CLAN ZETSU">CLAN ZETSU</h1>
+            <p class="tagline">Là où les légendes s'écrivent, où les souvenirs sont éternels</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span id="totalMembers">0</span>
+                    <p>Membres</p>
+                </div>
+                <div class="stat">
+                    <span>⚔️</span>
+                    <p>Légendaires</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chefs Section -->
+    <section id="chefs" class="members-section">
+        <h2 class="section-title"><i class="fas fa-crown"></i> Chefs Suprêmes</h2>
+        <div id="chefsContainer" class="members-grid"></div>
+    </section>
+
+    <!-- Sous-Chefs Section -->
+    <section id="souschefs" class="members-section">
+        <h2 class="section-title"><i class="fas fa-star-of-life"></i> Sous-Chefs</h2>
+        <div id="sousChefsContainer" class="members-grid"></div>
+    </section>
+
+    <!-- Soldats Section -->
+    <section id="soldats" class="members-section">
+        <h2 class="section-title"><i class="fas fa-shield-alt"></i> Soldats d'Élite</h2>
+        <div id="soldatsContainer" class="members-grid"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass-footer">
+        <p>© 2024 Clan ZETSU - Tous droits réservés</p>
+        <p><i class="fas fa-fire"></i> Héritage éternel <i class="fas fa-fire"></i></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+by joyboy 
