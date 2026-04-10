@@ -113,7 +113,6 @@ function displayMembers() {
 
 // Audio
 let audio = null;
-let isPlaying = false;
 
 function initAudio() {
     audio = document.getElementById('bgAudio');
@@ -123,14 +122,8 @@ function initAudio() {
         
         const audioBtn = document.getElementById('audioBtn');
         
-        // Tentative de lecture automatique
         const attemptPlay = () => {
-            audio.play().then(() => {
-                isPlaying = true;
-                if (audioBtn) audioBtn.innerHTML = '<i class="fas fa-volume-up"></i><span class="pulse-ring"></span>';
-            }).catch(() => {
-                console.log('Auto-play bloqué, attendez un clic');
-            });
+            audio.play().catch(() => {});
             document.removeEventListener('click', attemptPlay);
             document.removeEventListener('touchstart', attemptPlay);
         };
@@ -185,21 +178,26 @@ function initSmoothScroll() {
     }
 }
 
-// Admin button
+// Admin button - TOUJOURS VISIBLE
 function initAdminButton() {
+    // Vérifier si le bouton existe déjà
+    if (document.getElementById('adminBtn')) return;
+    
     const adminBtn = document.createElement('button');
     adminBtn.id = 'adminBtn';
     adminBtn.className = 'admin-panel-btn';
     adminBtn.innerHTML = '<i class="fas fa-user-shield"></i>';
+    adminBtn.style.cssText = 'position: fixed; bottom: 30px; left: 30px; z-index: 1000; background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; border-radius: 50%; width: 55px; height: 55px; cursor: pointer; color: #000; font-size: 1.3rem; transition: all 0.3s; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255,215,0,0.5);';
+    
+    adminBtn.onmouseover = () => { adminBtn.style.transform = 'scale(1.1)'; };
+    adminBtn.onmouseout = () => { adminBtn.style.transform = 'scale(1)'; };
     adminBtn.onclick = () => {
         window.location.href = 'admin.html';
     };
     document.body.appendChild(adminBtn);
-    
-    const isAdmin = localStorage.getItem('zetsuAdminLoggedIn') === 'true';
-    if (isAdmin) adminBtn.classList.add('visible');
 }
 
+// Rafraîchir l'affichage depuis admin
 window.refreshDisplay = function() {
     displayMembers();
 };
