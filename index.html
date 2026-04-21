@@ -5,137 +5,778 @@ EMPIRE ZETSU dirigé par l'empereur BLACK TOBI
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Clan ZETSU - Légendes Éternelles</title>
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a0507;
+            color: #e0d8c8;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* FOND ANIMÉ AVEC EFFET ROUGE/NOIR */
+        .fixed-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 20% 30%, #1a0508 0%, #020001 100%);
+        }
+
+        .fixed-bg::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg, rgba(180, 20, 20, 0.03) 0px, rgba(180, 20, 20, 0.03) 2px, transparent 2px, transparent 8px);
+            pointer-events: none;
+        }
+
+        .fixed-bg::after {
+            content: "";
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            background: radial-gradient(ellipse at center, rgba(200, 30, 30, 0.15) 0%, rgba(0,0,0,0) 70%);
+            animation: pulseRed 8s ease-in-out infinite;
+        }
+
+        @keyframes pulseRed {
+            0% { opacity: 0.3; transform: scale(1);}
+            50% { opacity: 0.7; transform: scale(1.05);}
+            100% { opacity: 0.3; transform: scale(1);}
+        }
+
+        /* AUDIO BTN */
+        .audio-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #b81c1c, #4a0000);
+            border: 1px solid rgba(255, 80, 80, 0.6);
+            color: #ffcc88;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 26px;
+            box-shadow: 0 0 20px rgba(200, 0, 0, 0.5);
+            transition: 0.3s;
+            backdrop-filter: blur(4px);
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+            background: #c22;
+            box-shadow: 0 0 30px red;
+        }
+
+        /* NAVIGATION */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(200, 40, 40, 0.6);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #d32f2f;
+            text-shadow: 0 0 8px #ff4444;
+        }
+
+        .logo i {
+            margin-right: 8px;
+            color: #ffaa33;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: #ddd4c5;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #ff4444;
+            text-shadow: 0 0 5px #ff6666;
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .nav-toggle span {
+            width: 28px;
+            height: 2px;
+            background: #ff5555;
+            margin: 4px 0;
+            transition: 0.3s;
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 2rem;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(180, 20, 20, 0.8);
+            backdrop-filter: blur(5px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ff6666;
+            color: #ffddaa;
+        }
+
+        .hero-title {
+            font-size: 6rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffdd99, #ff6666, #b11);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255,0,0,0.5);
+            letter-spacing: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #f0e6d2;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            padding: 1rem 2rem;
+            border-radius: 60px;
+            border: 1px solid #a22;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #ff6666;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(95deg, #b11, #630000);
+            padding: 1rem 2.2rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+            border: 1px solid #ff7777;
+            box-shadow: 0 0 15px rgba(255,0,0,0.4);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-5px);
+            background: #c22;
+            box-shadow: 0 0 25px red;
+        }
+
+        /* SECTIONS */
+        .section {
+            padding: 5rem 1rem;
+        }
+
+        .alt-bg {
+            background: rgba(10, 3, 5, 0.7);
+            backdrop-filter: blur(2px);
+            border-top: 1px solid #a22;
+            border-bottom: 1px solid #a22;
+        }
+
+        .section-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-icon {
+            font-size: 2.8rem;
+            color: #d33;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .section-subtitle {
+            color: #bbaa88;
+            margin-bottom: 0.8rem;
+        }
+
+        .section-line {
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #d33, #ff8866);
+            margin: 1rem auto 0;
+        }
+
+        /* GRILLES */
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .chefs-grid {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        /* CARTES AVEC EFFET ROUGE ATTRACTIF */
+        .member-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(200, 50, 50, 0.4);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            text-align: center;
+            padding: 1.5rem 1rem 2rem;
+            position: relative;
+        }
+
+        .member-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff4444, #ffaa44);
+        }
+
+        .member-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: #ff5555;
+            box-shadow: 0 0 30px rgba(255, 40, 40, 0.6);
+            background: rgba(30, 5, 8, 0.85);
+        }
+
+        .member-avatar {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(145deg, #2a0a0a, #1a0204);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: #ff6644;
+            border: 2px solid #b33;
+            box-shadow: 0 0 15px #b00;
+            transition: 0.3s;
+        }
+
+        .member-card:hover .member-avatar {
+            transform: scale(1.05);
+            border-color: #ff7777;
+            box-shadow: 0 0 25px #ff3333;
+        }
+
+        .member-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: 'Cormorant Garamond', serif;
+            margin-bottom: 0.3rem;
+            color: #fff0e0;
+        }
+
+        .member-rank {
+            display: inline-block;
+            background: #b11;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #ffddbb;
+            margin: 0.5rem 0;
+        }
+
+        .member-desc {
+            font-size: 0.85rem;
+            color: #cbbaa5;
+            margin: 0.8rem 0;
+            padding: 0 0.5rem;
+        }
+
+        .member-stats {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #ffaa88;
+        }
+
+        .member-stats span i {
+            margin-right: 5px;
+            color: #e55;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #030001;
+            border-top: 1px solid #a22;
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .footer-brand {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #d44;
+        }
+
+        .footer-brand i {
+            margin: 0 12px;
+            color: #ffaa55;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 3rem; }
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background: rgba(0,0,0,0.95);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                padding: 2rem;
+                gap: 1.5rem;
+            }
+            .nav-menu.active { left: 0; }
+            .nav-toggle { display: flex; }
+            .hero-stats { flex-direction: column; gap: 0.8rem; border-radius: 30px; width: 80%; margin: 1rem auto; }
+        }
+
+        /* curseur personnalisé rouge feu */
+        ::selection {
+            background: #b11;
+            color: #ffddaa;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0002;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b33;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
-    <!-- Fond fixe -->
-    <div class="fixed-bg"></div>
+<div class="fixed-bg"></div>
+<audio id="bgAudio" loop>
+    <source src="song.mp3 2.m4a" type="audio/mpeg">
+    <source src="song.mp3.m4a" type="audio/mp4">
+</audio>
+<button id="audioBtn" class="audio-btn"><i class="fas fa-music"></i></button>
 
-    <!-- Audio -->
-    <audio id="bgAudio" loop>
-        <source src="song.mp3 2.m4a" type="audio/mpeg">
-        <source src="song.mp3.m4a" type="audio/mp4">
-    </audio>
+<nav class="nav-bar">
+    <div class="nav-container">
+        <div class="logo"><i class="fas fa-crown"></i> ZETSU</div>
+        <ul class="nav-menu">
+            <li><a href="#accueil" class="nav-link active">Accueil</a></li>
+            <li><a href="#chefs" class="nav-link">Chefs</a></li>
+            <li><a href="#souschefs" class="nav-link">Sous-Chefs</a></li>
+            <li><a href="#soldats" class="nav-link">Soldats</a></li>
+        </ul>
+        <div class="nav-toggle"><span></span><span></span><span></span></div>
+    </div>
+</nav>
 
-    <!-- Contrôle audio -->
-    <button id="audioBtn" class="audio-btn">
-        <i class="fas fa-music"></i>
-    </button>
-
-    <!-- Navigation -->
-    <nav class="nav-bar">
-        <div class="nav-container">
-            <div class="logo">
-                <i class="fas fa-crown"></i>
-                <span>ZETSU</span>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="#accueil" class="nav-link active">Accueil</a></li>
-                <li><a href="#chefs" class="nav-link">Chefs</a></li>
-                <li><a href="#souschefs" class="nav-link">Sous-Chefs</a></li>
-                <li><a href="#soldats" class="nav-link">Soldats</a></li>
-            </ul>
-            <div class="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+<section id="accueil" class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-badge">EMPIRE ZETSU — PAR JOYBOY LE ROI 👑</div>
+        <h1 class="hero-title">ZETSU</h1>
+        <p class="hero-subtitle">Là où les légendes s'écrivent,<br>les souvenirs sont éternels</p>
+        <div class="hero-stats">
+            <div class="stat-item"><span class="stat-number" id="totalMembers">0</span><span class="stat-label">Membres</span></div>
+            <div class="stat-divider"></div>
+            <div class="stat-item"><span class="stat-number" id="totalLikes">0</span><span class="stat-label">Likes</span></div>
+            <div class="stat-divider"></div>
+            <div class="stat-item"><span class="stat-number">3</span><span class="stat-label">Grades</span></div>
         </div>
-    </nav>
+        <a href="#chefs" class="hero-btn"><span>Découvrir le clan</span><i class="fas fa-arrow-down"></i></a>
+    </div>
+</section>
 
-    <!-- Section Accueil -->
-    <section id="accueil" class="hero">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <div class="hero-badge">CLAN OFFICIEL</div>
-            <h1 class="hero-title">ZETSU</h1>
-            <p class="hero-subtitle">Là où les légendes s'écrivent,<br>les souvenirs sont éternels</p>
-            <div class="hero-stats">
-                <div class="stat-item">
-                    <span class="stat-number" id="totalMembers">0</span>
-                    <span class="stat-label">Membres</span>
-                </div>
-                <div class="stat-divider"></div>
-                <div class="stat-item">
-                    <span class="stat-number" id="totalLikes">0</span>
-                    <span class="stat-label">Likes</span>
-                </div>
-                <div class="stat-divider"></div>
-                <div class="stat-item">
-                    <span class="stat-number">3</span>
-                    <span class="stat-label">Grades</span>
-                </div>
-            </div>
-            <a href="#chefs" class="hero-btn">
-                <span>Découvrir le clan</span>
-                <i class="fas fa-arrow-down"></i>
-            </a>
-        </div>
-    </section>
+<section id="chefs" class="section">
+    <div class="section-container">
+        <div class="section-header"><div class="section-icon"><i class="fas fa-crown"></i></div><h2 class="section-title">Conseil Suprême</h2><p class="section-subtitle">Les leaders légendaires du clan</p><div class="section-line"></div></div>
+        <div id="chefsContainer" class="members-grid chefs-grid"></div>
+    </div>
+</section>
 
-    <!-- Section Chefs -->
-    <section id="chefs" class="section">
-        <div class="section-container">
-            <div class="section-header">
-                <div class="section-icon">
-                    <i class="fas fa-crown"></i>
-                </div>
-                <h2 class="section-title">Conseil Suprême</h2>
-                <p class="section-subtitle">Les leaders légendaires du clan</p>
-                <div class="section-line"></div>
-            </div>
-            <div id="chefsContainer" class="members-grid chefs-grid"></div>
-        </div>
-    </section>
+<section id="souschefs" class="section alt-bg">
+    <div class="section-container">
+        <div class="section-header"><div class="section-icon"><i class="fas fa-star-of-life"></i></div><h2 class="section-title">Garde d'Élite</h2><p class="section-subtitle">Les piliers de la puissance du clan</p><div class="section-line"></div></div>
+        <div id="sousChefsContainer" class="members-grid"></div>
+    </div>
+</section>
 
-    <!-- Section Sous-Chefs -->
-    <section id="souschefs" class="section alt-bg">
-        <div class="section-container">
-            <div class="section-header">
-                <div class="section-icon">
-                    <i class="fas fa-star-of-life"></i>
-                </div>
-                <h2 class="section-title">Garde d'Élite</h2>
-                <p class="section-subtitle">Les piliers de la puissance du clan</p>
-                <div class="section-line"></div>
-            </div>
-            <div id="sousChefsContainer" class="members-grid"></div>
-        </div>
-    </section>
+<section id="soldats" class="section">
+    <div class="section-container">
+        <div class="section-header"><div class="section-icon"><i class="fas fa-shield-alt"></i></div><h2 class="section-title">Légion Sacrée</h2><p class="section-subtitle">Les guerriers d'élite du clan</p><div class="section-line"></div></div>
+        <div id="soldatsContainer" class="members-grid"></div>
+    </div>
+</section>
 
-    <!-- Section Soldats -->
-    <section id="soldats" class="section">
-        <div class="section-container">
-            <div class="section-header">
-                <div class="section-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h2 class="section-title">Légion Sacrée</h2>
-                <p class="section-subtitle">Les guerriers d'élite du clan</p>
-                <div class="section-line"></div>
-            </div>
-            <div id="soldatsContainer" class="members-grid"></div>
-        </div>
-    </section>
+<footer class="footer">
+    <div class="footer-container"><div class="footer-brand"><i class="fas fa-dragon"></i> CLAN ZETSU <i class="fas fa-dragon"></i></div><p class="footer-text">Héritage éternel - Par JOYBOY le roi 👑 | Empire ZETSU dirigé par l'empereur BLACK TOBI</p><div class="footer-copyright"><p>© 2025 Clan ZETSU - Légendes Éternelles</p></div></div>
+</footer>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <i class="fas fa-dragon"></i>
-                <span>CLAN ZETSU</span>
-                <i class="fas fa-dragon"></i>
-            </div>
-            <p class="footer-text">Héritage éternel - Depuis la nuit des temps</p>
-            <div class="footer-copyright">
-                <p>© 2024 Clan ZETSU - Tous droits réservés</p>
-            </div>
-        </div>
-    </footer>
+<script>
+    // Membres avec couleurs rougeoyantes et effets attractifs
+    const membresData = {
+        chefs: [
+            { name: "BLACK TOBI", rank: "EMPEREUR ABSOLU", desc: "Souverain des ombres, maître de la flamme éternelle", likes: 15800, avatarIcon: "fas fa-crown", bgEffect: true },
+            { name: "JOYBOY", rank: "LÉGENDE VIVANTE", desc: "Le Roi libérateur, puissance infinie", likes: 14200, avatarIcon: "fas fa-dragon" },
+            { name: "AKUMA NO RYU", rank: "CHEF DE GUERRE", desc: "Furie rouge, lame du chaos", likes: 12900, avatarIcon: "fas fa-skull" }
+        ],
+        souschefs: [
+            { name: "MISS ROUGE", rank: "GARDE ROYALE", desc: "Lames jumelles enflammées", likes: 8700, avatarIcon: "fas fa-fist-raised" },
+            { name: "KURO TENSHI", rank: "STRATÈGE SUPRÊME", desc: "L'ombre qui manipule le destin", likes: 9100, avatarIcon: "fas fa-chess-queen" },
+            { name: "SCARLET VIPER", rank: "EXÉCUTRICE", desc: "Venin écarlate, mortelle élégance", likes: 8300, avatarIcon: "fas fa-snake" }
+        ],
+        soldats: [
+            { name: "REN SHIROGANE", rank: "LANCE D'ÉLITE", desc: "Brasier d'acier", likes: 4200, avatarIcon: "fas fa-shield-virus" },
+            { name: "KAI BLOODMOON", rank: "SABREUR INFERNAL", desc: "Danse du crépuscule", likes: 3900, avatarIcon: "fas fa-meteor" },
+            { name: "RIN OKAMI", rank: "GUERRIER MYSTIQUE", desc: "Hurlement de braise", likes: 3700, avatarIcon: "fas fa-wolf-pack-battalion" },
+            { name: "HIKARI NO AKUMA", rank: "VANNEUR DES ÂMES", desc: "Lueur démoniaque", likes: 3500, avatarIcon: "fas fa-fire" },
+            { name: "ZAN KURENAI", rank: "LAME ÉCARLATE", desc: "Tranchant absolu", likes: 4000, avatarIcon: "fas fa-khanda" }
+        ]
+    };
 
-    <script src="script.js"></script>
+    // Fonction pour générer les cartes avec animations attractives rouges
+    function createMemberCard(member, type) {
+        let avatarHtml = `<div class="member-avatar"><i class="${member.avatarIcon}"></i></div>`;
+        let likeVal = member.likes || Math.floor(Math.random() * 9000) + 2000;
+        // Ajouter un effet rouge brillant aléatoire pour attirer
+        const card = document.createElement('div');
+        card.className = 'member-card';
+        card.setAttribute('data-likes', likeVal);
+        card.innerHTML = `
+            ${avatarHtml}
+            <div class="member-name">${member.name}</div>
+            <div class="member-rank">${member.rank}</div>
+            <div class="member-desc">${member.desc}</div>
+            <div class="member-stats">
+                <span><i class="fas fa-heart" style="color:#ff4444;"></i> <span class="like-counter">${likeVal}</span></span>
+                <span><i class="fas fa-fire"></i> Puissance</span>
+            </div>
+            <div class="card-glow" style="position:absolute; bottom:0; left:0; width:100%; height:100%; pointer-events:none; background: radial-gradient(circle at 50% 0%, rgba(255,40,40,0.1), transparent); border-radius:24px;"></div>
+        `;
+        // effet additionnel au survol (déjà géré par CSS)
+        return card;
+    }
+
+    function updateTotalStats() {
+        let allMembers = [...membresData.chefs, ...membresData.souschefs, ...membresData.soldats];
+        let totalMemb = allMembers.length;
+        let totalLikes = allMembers.reduce((acc, m) => acc + (m.likes || 0), 0);
+        document.getElementById('totalMembers').innerText = totalMemb;
+        document.getElementById('totalLikes').innerText = totalLikes.toLocaleString();
+    }
+
+    function renderMembers() {
+        const chefsContainer = document.getElementById('chefsContainer');
+        const sousChefsContainer = document.getElementById('sousChefsContainer');
+        const soldatsContainer = document.getElementById('soldatsContainer');
+        
+        chefsContainer.innerHTML = '';
+        sousChefsContainer.innerHTML = '';
+        soldatsContainer.innerHTML = '';
+
+        membresData.chefs.forEach(chef => {
+            chefsContainer.appendChild(createMemberCard(chef, 'chef'));
+        });
+        membresData.souschefs.forEach(sous => {
+            sousChefsContainer.appendChild(createMemberCard(sous, 'sous'));
+        });
+        membresData.soldats.forEach(soldat => {
+            soldatsContainer.appendChild(createMemberCard(soldat, 'soldat'));
+        });
+        updateTotalStats();
+        attachLikeEffects();
+    }
+
+    // Fonction pour ajouter un effet "like" rouge attrayant : au clic sur le cœur, incrémente localement, maj total
+    function attachLikeEffects() {
+        const allCards = document.querySelectorAll('.member-card');
+        allCards.forEach(card => {
+            const heartSpan = card.querySelector('.member-stats span:first-child .like-counter');
+            if(!heartSpan) return;
+            const heartIcon = card.querySelector('.member-stats span:first-child i');
+            if(heartIcon && !card.hasAttribute('data-like-bound')) {
+                heartIcon.style.cursor = 'pointer';
+                heartIcon.style.transition = '0.2s';
+                heartIcon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    let currentLikes = parseInt(heartSpan.innerText.replace(/,/g,''));
+                    if(isNaN(currentLikes)) currentLikes = 0;
+                    const newLikes = currentLikes + 1;
+                    heartSpan.innerText = newLikes.toLocaleString();
+                    // Animation flash rouge
+                    heartIcon.style.transform = 'scale(1.3)';
+                    heartIcon.style.textShadow = '0 0 10px red';
+                    setTimeout(() => {
+                        heartIcon.style.transform = 'scale(1)';
+                        heartIcon.style.textShadow = 'none';
+                    }, 200);
+                    // Mettre à jour le total des likes globaux
+                    let allSpans = document.querySelectorAll('.member-stats span:first-child .like-counter');
+                    let total = 0;
+                    allSpans.forEach(span => {
+                        let val = parseInt(span.innerText.replace(/,/g,''));
+                        total += val;
+                    });
+                    document.getElementById('totalLikes').innerText = total.toLocaleString();
+                    
+                    // petite notification visuelle rouge
+                    const notif = document.createElement('div');
+                    notif.innerText = '+1 ❤️';
+                    notif.style.position = 'fixed';
+                    notif.style.bottom = '80px';
+                    notif.style.right = '30px';
+                    notif.style.background = '#b00';
+                    notif.style.color = '#ffcc88';
+                    notif.style.padding = '6px 14px';
+                    notif.style.borderRadius = '40px';
+                    notif.style.fontWeight = 'bold';
+                    notif.style.zIndex = '9999';
+                    notif.style.boxShadow = '0 0 15px red';
+                    notif.style.fontSize = '0.9rem';
+                    document.body.appendChild(notif);
+                    setTimeout(() => notif.remove(), 1000);
+                });
+                card.setAttribute('data-like-bound', 'true');
+            }
+        });
+    }
+
+    // Ajouter un effet supplémentaire : particules rouges subtiles sur hover des cartes
+    function addExtraRedEffect() {
+        const style = document.createElement('style');
+        style.textContent = `
+            .member-card:hover .member-avatar i {
+                text-shadow: 0 0 15px #ff3300;
+                animation: pulseIcon 0.6s infinite alternate;
+            }
+            @keyframes pulseIcon {
+                from { text-shadow: 0 0 5px red; }
+                to { text-shadow: 0 0 20px #ff6666; }
+            }
+            .member-card:hover {
+                border-image: linear-gradient(45deg, #ff4444, #ffaa44) 1;
+                box-shadow: 0 0 28px rgba(255, 0, 0, 0.7);
+            }
+            .hero-btn, .audio-btn {
+                animation: glowPulse 2s infinite;
+            }
+            @keyframes glowPulse {
+                0% { box-shadow: 0 0 5px #c33; }
+                100% { box-shadow: 0 0 20px #ff4444; }
+            }
+            .member-rank {
+                background: linear-gradient(95deg, #8b0000, #d33);
+                font-weight: bold;
+            }
+            .section-title {
+                background: linear-gradient(135deg, #f3cba5, #e55);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+            .hero-stats .stat-number {
+                text-shadow: 0 0 8px #ff4444;
+            }
+            .nav-link.active {
+                border-bottom: 2px solid #ff5555;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Audio management + rappel du titre
+    const audio = document.getElementById('bgAudio');
+    const audioBtn = document.getElementById('audioBtn');
+    let audioPlaying = false;
+    audioBtn.addEventListener('click', () => {
+        if(audioPlaying) {
+            audio.pause();
+            audioBtn.style.opacity = "0.7";
+        } else {
+            audio.play().catch(e => console.log("audio auto-blocked"));
+            audioBtn.style.opacity = "1";
+        }
+        audioPlaying = !audioPlaying;
+    });
+    // tentative de lecture automatique douce
+    document.body.addEventListener('click', function initAudio() {
+        if(!audioPlaying) {
+            audio.play().catch(()=>{});
+            audioPlaying = true;
+            audioBtn.style.opacity = "1";
+        }
+        document.body.removeEventListener('click', initAudio);
+    });
+    
+    // Menu mobile
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    navToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+    });
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            navMenu.classList.remove('active');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+        });
+    });
+    
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if(targetId === "#") return;
+            const target = document.querySelector(targetId);
+            if(target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+    
+    // Mise en avant de l'empereur BLACK TOBI et effets rouges supplémentaires sur le titre
+    renderMembers();
+    addExtraRedEffect();
+    // Ajouter un effet "particules rouges" fantaisie légère pour attirer le regard
+    setInterval(() => {
+        const redGlow = document.createElement('div');
+        redGlow.style.position = 'fixed';
+        redGlow.style.bottom = Math.random() * window.innerHeight + 'px';
+        redGlow.style.left = Math.random() * window.innerWidth + 'px';
+        redGlow.style.width = '8px';
+        redGlow.style.height = '8px';
+        redGlow.style.background = 'radial-gradient(circle, #ff4444, transparent)';
+        redGlow.style.borderRadius = '50%';
+        redGlow.style.pointerEvents = 'none';
+        redGlow.style.zIndex = '9998';
+        redGlow.style.opacity = '0.6';
+        redGlow.style.filter = 'blur(2px)';
+        document.body.appendChild(redGlow);
+        setTimeout(() => redGlow.remove(), 800);
+    }, 1800);
+    
+    // Afficher un message glorieux dans la console
+    console.log("%c🔥 EMPIRE ZETSU - Dirigé par l'Empereur BLACK TOBI | Par JoyBoy le Roi 👑 🔥", "color: #ff4444; font-size: 18px; font-weight: bold; text-shadow: 2px 2px 0px #330000;");
+</script>
 </body>
 </html>
-zetsu house .... by joyboy le roi 👑 
